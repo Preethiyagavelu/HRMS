@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Faculty Login</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .contact-admin-btn {
+            margin-top: 15px;
+            display: none;
+            text-decoration: none;
+            color: white;
+            background-color: #fbb115;
+            padding: 10px 20px;
+            border-radius: 6px;
+            transition: 0.3s;
+            display: inline-block;
+        }
+
+        .contact-admin-btn:hover {
+            background-color: #e6a100;
+        }
+
+        .approval-msg {
+            margin-top: 10px;
+            font-weight: bold;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <section class="fields">
+        <h1>Faculty Login</h1>
+        <div class="form-box">
+            <form onsubmit="return validateFacultyLogin()">
+                <input type="text" id="facultyId" placeholder="Faculty ID" required>
+                <input type="password" id="facultyPassword" placeholder="Password" required>
+                <button class="hero-btn" type="submit">Login</button>
+                <p id="error-msg" class="approval-msg" style="display: none;">
+                    🔒 Access denied. Please contact admin.
+                </p>
+                <a id="contactAdmin" class="contact-admin-btn" href="mailto:admin@vipsteach.com?subject=Faculty Login Access Request">Contact Admin</a>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        function validateFacultyLogin() {
+            const facultyId = document.getElementById('facultyId').value.trim();
+            const password = document.getElementById('facultyPassword').value.trim();
+            const errorMsg = document.getElementById('error-msg');
+            const contactBtn = document.getElementById('contactAdmin');
+
+            // Reset visibility
+            errorMsg.style.display = "none";
+            contactBtn.style.display = "none";
+
+            // Basic validation
+            if (facultyId === "" || password === "") {
+                alert("Please fill in all fields.");
+                return false;
+            }
+
+            // Simulated approval failure (this can be replaced by real backend logic)
+            // You can change the condition here later
+            if (facultyId !== "faculty123" || password !== "password123") {
+                errorMsg.style.display = "block";
+                contactBtn.style.display = "inline-block";
+                return false;
+            }
+
+            alert("Login successful!");
+            return true;
+        }
+    </script>
+</body>
+</html>

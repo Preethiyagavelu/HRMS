@@ -1,0 +1,350 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+.header {
+    min-height: 100vh;
+    width: 100%;
+    background-color: whitesmoke;
+    background-position: center;
+    background-size: cover;
+    position: relative;
+}
+
+nav {
+    display: flex;
+    padding: 2% 6%;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav img {
+    width: 150px;
+}
+
+.nav-links {
+    flex: 1;
+    text-align: right;
+}
+
+.nav-links ul {
+    list-style: none;
+}
+
+.nav-links ul li {
+    display: inline-block;
+    padding: 8px 12px;
+    position: relative;
+}
+
+.nav-links ul li a {
+    color: #333;
+    text-decoration: none;
+    font-size: 16px;
+    transition: 0.3s;
+}
+
+.nav-links ul li a:hover {
+    color: #fbb115;
+}
+.text-box{
+    width:90%;
+    color: #fbb115;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    text-align:center;
+}
+.text-box h1{
+    font-size:50px;
+}
+.text-box p{
+    margin:10px 0 40px;
+    font-size:14px;
+    color:black
+}
+.text-box {
+    width: 90%;
+    color: #fbb115;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.hero-btn {
+    display: inline-block;
+    text-decoration: none;
+    color: #fbb115;
+    border: 1px solid black;
+    padding: 12px 34px;
+    font-size: 13px;
+    background: transparent;
+    position: relative;
+    cursor: pointer;
+    transition: 0.5s;
+}
+
+.hero-btn:hover {
+    background: black;
+    color: white;
+}
+/*...........course........*/
+.course{
+    width:80%;
+    margin:auto;
+    text-align:center;
+    padding-top:100px;
+}
+
+h1{
+    font-size:36px;
+    font-weight:600;
+
+}
+p{
+    color:#777;
+    font-size:14px;
+    font-weight:300;
+    line-height:22px;
+    padding: 10px;
+}
+
+.row{
+    margin-top: 5%;
+    display: flex;
+    justify-content:space-between;
+    
+}
+.course-col{
+    flex-basis: 31%;
+    background:#fff3f3;
+    border-radius:10px;
+    margin-bottom:5%;
+    padding:20px 12px;
+    box-sizing:border-box;
+    transition:0.5s;
+    cursor:pointer;
+}
+h3{
+    text-align:center;
+    font-weight:600;
+    margin:10px 0;
+
+}
+
+.course-col:hover{
+    box-shadow:0 0 20px 0px #fbb115
+}
+/*..........Fields.......*/
+
+.fields {
+    width: 80%;
+    margin: auto;
+    text-align: center;
+    padding-top: 50px;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.fields-col {
+    flex-basis: 32%;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    position: relative;
+    overflow: hidden;
+}
+
+.fields-col img {
+    width: 100%;
+    display: block;
+    border-radius: 10px;
+}
+
+.layer {
+    background: transparent;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: 0.5s;
+}
+
+.layer:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.layer h3 {
+    width: 100%;
+    font-weight: 500;
+    color: white;
+    font-size: 26px;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%);
+    position: absolute;
+    opacity: 0;
+    transition: 0.5s;
+    font-family: Arial, Helvetica, sans-serif;
+    text-shadow: 1px 1px 3px black;
+}
+
+.layer:hover h3 {
+    bottom: 49%;
+    opacity: 1;
+}
+
+/* ✅ Responsive Design */
+@media (max-width: 768px) {
+    .fields-col {
+        flex-basis: 100%;
+    }
+
+    .row {
+        flex-direction: column;
+        align-items: center;
+    }
+}
+/*................. testimonials.............*/
+.testimonials{
+    width:80%;
+    margin:auto;
+    padding:100px;
+    text-align:center;
+}
+.testimonials-col{
+    flex-basis: 44%;
+    border-radius:10px;
+    margin-bottom:5%;
+    text-align:lefts;
+    background:#fff3f3;
+    padding:25px;
+    cursor:pointer;
+    display:flex;
+}
+.testimonials-col img{
+    height:40px;
+    margin-left:5px;
+    margin-right:30px;
+    border-radius:50%;
+}
+.testimonials-col p{
+    padding:0;
+
+}
+.testimonials-col h3{
+    margin-top:15px;
+    text-align:left;
+}
+
+/*........Login page.........*/
+/* Login Page Styling */
+.fields {
+    width: 100%;
+    min-height: 100vh;
+    background: linear-gradient(to bottom right, #fff9e6, #fbb11520);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.fields h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.form-box {
+    width: 100%;
+    max-width: 400px;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    animation: slideIn 0.6s ease forwards;
+    opacity: 0;
+    transform: translateY(30px);
+}
+
+@keyframes slideIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.form-box form input {
+    width: 100%;
+    padding: 14px 15px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.form-box form input:focus {
+    border-color: #fbb115;
+    outline: none;
+    box-shadow: 0 0 8px rgba(251, 177, 21, 0.3);
+}
+
+.hero-btn {
+    display: inline-block;
+    text-decoration: none;
+    color: #fff;
+    background-color: #fbb115;
+    border: none;
+    padding: 12px 34px;
+    font-size: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.4s;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.hero-btn:hover {
+    background-color: #e6a100;
+    box-shadow: 0 5px 15px rgba(251, 177, 21, 0.4);
+}
+
+.form-box p {
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+.form-box p a {
+    color: #fbb115;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.form-box p a:hover {
+    text-decoration: underline;
+}
+
+/* Approval message for faculty */
+.approval-msg {
+    margin-top: 15px;
+    color: red;
+    font-weight: 600;
+}

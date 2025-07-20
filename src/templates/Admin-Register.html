@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Registration</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <section class="fields">
+        <h1>Admin Registration</h1>
+        <div class="form-box">
+            <form onsubmit="return validateAdminForm()">
+                <input type="text" id="adminName" placeholder="Admin Name" required>
+                <input type="email" id="adminEmail" placeholder="Email" required>
+                <input type="text" id="adminID" placeholder="Admin Code / ID" required>
+                <input type="password" id="adminPassword" placeholder="Password" required>
+                <input type="password" id="adminConfirmPassword" placeholder="Confirm Password" required>
+                <button class="hero-btn" type="submit">Register</button>
+                <p>Already have an account? <a href="login-admin.html">Login</a></p>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        function validateAdminForm() {
+            const name = document.getElementById('adminName').value.trim();
+            const email = document.getElementById('adminEmail').value.trim();
+            const id = document.getElementById('adminID').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const confirmPassword = document.getElementById('adminConfirmPassword').value;
+
+            const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+
+            if (name === "" || email === "" || id === "" || password === "" || confirmPassword === "") {
+                alert("Please fill out all fields.");
+                return false;
+            }
+
+            if (!email.match(emailPattern)) {
+                alert("Please enter a valid email address.");
+                return false;
+            }
+
+            if (password.length < 6) {
+                alert("Password must be at least 6 characters.");
+                return false;
+            }
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match.");
+                return false;
+            }
+
+            // ✅ Registration successful
+            alert("Admin registration successful!");
+
+            // ✅ Redirect to admin login page
+            window.location.href = "login-admin.html";
+
+            return false; // prevent form from refreshing the page
+        }
+    </script>
+</body>
+</html>

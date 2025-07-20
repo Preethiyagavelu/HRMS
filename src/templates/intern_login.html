@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Intern Login - HRMS</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+  <section class="fields">
+    <h1>Intern Login - HRMS</h1>
+    
+    <div class="form-box">
+      <form id="loginForm">
+        <!-- Intern ID -->
+        <input type="text" id="internId" name="internId" placeholder="Intern ID" required />
+
+        <!-- Username -->
+        <input type="text" id="username" name="username" placeholder="Username" required />
+
+        <!-- Password -->
+        <input type="password" id="password" name="password" placeholder="Password" required />
+
+        <!-- Face Recognition -->
+        <label for="webcam" style="margin-top: 10px; font-weight: bold;">Face Recognition</label>
+        <video id="webcam" autoplay playsinline style="width: 100%; margin-top: 10px; border-radius: 10px;"></video>
+        <p class="note" style="font-size: 14px; color: #666;">Ensure your face is clearly visible to proceed.</p>
+
+        <!-- Login Button -->
+        <button type="submit" class="hero-btn">Login</button>
+
+        <!-- Register Link -->
+        <p style="margin-top: 20px;">Don't have an account? 
+          <a href="{{ url_for('register') }}" style="color: #fbb115; font-weight: bold; text-decoration: none;">Register here</a>
+        </p>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    const video = document.getElementById('webcam');
+    let canvas = document.createElement('canvas');
+  
+    // Start webcam
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then((stream) => {
+          video.srcObject = stream;
+        })
+        .catch((err) => {
+          console.error("Webcam access error:", err);
+        });
+    }
+  
+    // On form submit
+    document.getElementById('loginForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+  
+      const internId = document.getElementById('internId').value.trim();
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+  
+      if (!internId || !username || !password) {
+        alert("Please fill in all fields.");
+        return;
+      }
+  
+      // Capture frame
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0, canvas.width, canvas.height);
+      const imageData = canvas.toDataURL('image/jpeg');
+  
+      // Send to backend
+      fetch('/login_face', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ internId, username, password, image: imageData })
+      })
+      .then(res => res.json())
+      .then(data => {
+  // alert(data.message); // ✅ Removed pop-up
+  if (data.status === 'success') {
+    sessionStorage.setItem("internId", internId);
+    sessionStorage.setItem("username", username);
+    window.location.href = "/intern";
+  } else {
+    alert(data.message); // Still show alert only if login fails
+  }
+})
+      .catch(err => {
+        console.error(err);
+        alert("Something went wrong.");
+      });
+    });
+  </script>
+</body>
+</html>

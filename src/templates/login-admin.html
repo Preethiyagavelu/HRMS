@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <section class="fields">
+        <h1>Admin Login</h1>
+        <div class="form-box">
+            <form onsubmit="return validateAdminLogin()">
+                <!-- Admin Username -->
+                <input type="text" id="adminUsername" placeholder="Admin Username" required>
+
+                <!-- Admin Password -->
+                <input type="password" id="adminPassword" placeholder="Password" required>
+
+                <!-- Login Button -->
+                <button class="hero-btn" type="submit">Login</button>
+
+                <!-- Register Link -->
+                <p>Don't have an account? 
+                    <a href="Admin-Register.html">Register</a>
+                </p>
+            </form>
+        </div>
+    </section>
+
+    <script>
+        function validateAdminLogin() {
+            const username = document.getElementById("adminUsername").value.trim();
+            const password = document.getElementById("adminPassword").value.trim();
+
+            if (username === "" || password === "") {
+                alert("Please fill in all fields.");
+                return false;
+            }
+
+            if (password.length < 6) {
+                alert("Password must be at least 6 characters.");
+                return false;
+            }
+
+            // ✅ Simulated success message
+            alert("Login successful!");
+
+            // ✅ Redirect to HR Dashboard
+            window.location.href = "hr-dashboard.html";
+
+            return false; // Prevent actual form submission
+        }
+    </script>
+</body>
+</html>

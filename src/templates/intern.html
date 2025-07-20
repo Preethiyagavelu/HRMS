@@ -1,0 +1,97 @@
+<!-- intern.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Intern Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='intern.css') }}" />
+
+</head>
+<body>
+  <h2>Welcome to Intern Dashboard</h2>
+
+  <p><strong>Login Time:</strong> <span id="displayLoginTime"></span></p>
+  <p><strong>Punch-out at:</strong> 6:54 AM</p>
+
+  <video id="webcam" autoplay playsinline width="320" height="240" style="border-radius: 10px;"></video>
+
+  <div id="result" style="margin-top:20px;"></div>
+
+  <h3>Download Report</h3>
+  <button onclick="downloadReport('daily')">Download Daily Report</button>
+  <button onclick="downloadReport('weekly')">Download Weekly Report</button>
+  <button onclick="downloadReport('monthly')">Download Monthly Report</button>
+
+  <script>
+    const video = document.getElementById('webcam');
+    const loginTimeStr = sessionStorage.getItem("loginTime");
+    const loginTime = new Date(loginTimeStr);
+    document.getElementById("displayLoginTime").textContent = loginTime.toLocaleString();
+
+    // Start webcam
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+
+        const now = new Date();
+        const punchOutTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 20, 0, 0); // 8:00 PM
+let timeoutDuration = punchOutTime - now;
+
+// Optional: If it's already past 8:00 PM, skip the timer
+if (timeoutDuration > 0) {
+  setTimeout(() => {
+    stream.getTracks().forEach(track => track.stop());
+
+    const punchTime = new Date();
+    const duration = getDuration(loginTime, punchTime);
+    document.getElementById('result').innerHTML = `
+      <h3>Work Summary</h3>
+      <p><strong>Punch-Out Time:</strong> ${punchTime.toLocaleTimeString()}</p>
+      <p><strong>Total Duration:</strong> ${duration}</p>
+    `;
+
+    // Store summary for report generation
+    sessionStorage.setItem("punchOutTime", punchTime.toLocaleString());
+    sessionStorage.setItem("duration", duration);
+  }, timeoutDuration);
+} else {
+  alert("It's already past 8:00 PM. Webcam will not auto-close.");
+}
+
+      })
+      .catch(err => {
+        console.error("Webcam error:", err);
+        alert("Webcam access denied.");
+      });
+
+    function getDuration(start, end) {
+      const diffMs = end - start;
+      const minutes = Math.floor(diffMs / 60000);
+      const hours = Math.floor(minutes / 60);
+      const remainingMinutes = minutes % 60;
+      return `${hours} hours ${remainingMinutes} minutes`;
+    }
+
+    function downloadReport(type) {
+      const login = loginTime.toLocaleString();
+      const punch = sessionStorage.getItem("punchOutTime") || "N/A";
+      const duration = sessionStorage.getItem("duration") || "N/A";
+
+      const csvContent = [
+        ["Report Type", type.toUpperCase()],
+        ["Login Time", login],
+        ["Punch-Out Time", punch],
+        ["Total Duration", duration]
+      ].map(row => row.join(",")).join("\n");
+
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `${type}_report.csv`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>
