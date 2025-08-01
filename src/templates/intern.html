@@ -1,17 +1,15 @@
-<!-- intern.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <title>Intern Dashboard</title>
   <link rel="stylesheet" href="{{ url_for('static', filename='intern.css') }}" />
-
 </head>
 <body>
   <h2>Welcome to Intern Dashboard</h2>
 
   <p><strong>Login Time:</strong> <span id="displayLoginTime"></span></p>
-  <p><strong>Punch-out at:</strong> 6:54 AM</p>
+  <p><strong>Punch-out at:</strong> 8:00 PM</p>
 
   <video id="webcam" autoplay playsinline width="320" height="240" style="border-radius: 10px;"></video>
 
@@ -24,45 +22,16 @@
 
   <script>
     const video = document.getElementById('webcam');
+    const internId = sessionStorage.getItem("internId");
     const loginTimeStr = sessionStorage.getItem("loginTime");
-    const loginTime = new Date(loginTimeStr);
-    document.getElementById("displayLoginTime").textContent = loginTime.toLocaleString();
+    let loginTime;
 
-    // Start webcam
-    navigator.mediaDevices.getUserMedia({ video: true })
-      .then(stream => {
-        video.srcObject = stream;
-
-        const now = new Date();
-        const punchOutTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 20, 0, 0); // 8:00 PM
-let timeoutDuration = punchOutTime - now;
-
-// Optional: If it's already past 8:00 PM, skip the timer
-if (timeoutDuration > 0) {
-  setTimeout(() => {
-    stream.getTracks().forEach(track => track.stop());
-
-    const punchTime = new Date();
-    const duration = getDuration(loginTime, punchTime);
-    document.getElementById('result').innerHTML = `
-      <h3>Work Summary</h3>
-      <p><strong>Punch-Out Time:</strong> ${punchTime.toLocaleTimeString()}</p>
-      <p><strong>Total Duration:</strong> ${duration}</p>
-    `;
-
-    // Store summary for report generation
-    sessionStorage.setItem("punchOutTime", punchTime.toLocaleString());
-    sessionStorage.setItem("duration", duration);
-  }, timeoutDuration);
-} else {
-  alert("It's already past 8:00 PM. Webcam will not auto-close.");
-}
-
-      })
-      .catch(err => {
-        console.error("Webcam error:", err);
-        alert("Webcam access denied.");
-      });
+    if (loginTimeStr) {
+      loginTime = new Date(loginTimeStr);
+      document.getElementById("displayLoginTime").textContent = loginTime.toLocaleString();
+    } else {
+      document.getElementById("displayLoginTime").textContent = "Login time not found.";
+    }
 
     function getDuration(start, end) {
       const diffMs = end - start;
@@ -72,8 +41,59 @@ if (timeoutDuration > 0) {
       return `${hours} hours ${remainingMinutes} minutes`;
     }
 
+    function punchOut(stream) {
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+      }
+
+      const punchTime = new Date();
+      const duration = getDuration(loginTime, punchTime);
+
+      document.getElementById('result').innerHTML = `
+        <h3>Work Summary</h3>
+        <p><strong>Punch-Out Time:</strong> ${punchTime.toLocaleTimeString()}</p>
+        <p><strong>Total Duration:</strong> ${duration}</p>
+      `;
+
+      sessionStorage.setItem("punchOutTime", punchTime.toLocaleString());
+      sessionStorage.setItem("duration", duration);
+
+      const punchData = JSON.stringify({
+        internId: internId,
+        punchOutTime: punchTime.toLocaleString(),
+        duration: duration
+      });
+
+      navigator.sendBeacon("/submit_punchout", new Blob([punchData], { type: 'application/json' }));
+    }
+
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => {
+        video.srcObject = stream;
+
+        const now = new Date();
+        const punchOutTime = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 20, 0, 0); // 8 PM
+        const timeoutDuration = punchOutTime - now;
+
+        if (timeoutDuration > 0 && loginTime) {
+          setTimeout(() => punchOut(stream), timeoutDuration);
+        } else {
+          console.warn("⏰ Already past 8 PM. No auto punch-out.");
+        }
+
+        window.onbeforeunload = () => {
+          if (loginTime && video.srcObject) {
+            punchOut(video.srcObject);
+          }
+        };
+      })
+      .catch(err => {
+        console.error("Webcam error:", err);
+        alert("Webcam access denied.");
+      });
+
     function downloadReport(type) {
-      const login = loginTime.toLocaleString();
+      const login = loginTime ? loginTime.toLocaleString() : "N/A";
       const punch = sessionStorage.getItem("punchOutTime") || "N/A";
       const duration = sessionStorage.getItem("duration") || "N/A";
 
